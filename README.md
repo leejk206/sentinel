@@ -19,7 +19,7 @@ The core thesis, provable in a terminal with no wallet, no funds, no UI:
 ```bash
 npm install
 npm run demo     # shows: clean order ALLOWED, hijacked order BLOCKED
-npm test         # 14 unit tests on the matcher + commitment
+npm test         # 38 tests; npm run eval → 7/7 attacks blocked, 0 false positives
 ```
 
 `npm run demo` loads a committed intent (`long 0.5 SOL @ 3x`), passes a clean order (✓ allow → auto-sign) and a hijacked order (`long 5 SCAM @ 50x` → ⚠ block with per-field divergences). The hijack values are a **neutral, deterministic mutation** — not an LLM attack we authored — so the guard's catch isn't a rigged demo.
@@ -113,7 +113,9 @@ sentinel exec --commit <hash> order market short 412.456 ATTACKER --leverage 50
 - `src/poison.ts` — deterministic "poisoned tool" mutation (stands in for an injection)
 - `src/demo.ts` / `src/demo-hijack.ts` / `src/run-agent.ts` — D1 guard demo / D6-7 hijack demo / D2 agent loop
 - `fixtures/` — committed intent, clean/hijacked orders, sample signals
-- `test/` — 31 tests (matcher, commitment, normalization, strategy, contract ABI/encoding, guard server)
+- `src/eval.ts` + `src/run-eval.ts` — measured detection / false-positive table (`npm run eval`)
+- `test/` — 38 tests (matcher, commitment, normalization, strategy, contract ABI/encoding, guard server, eval)
+- `docs/SUBMISSION.md` — submission checklist, BUIDL copy, demo script, X thread, deck outline
 
 ## Roadmap (spec §3)
 D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deployed live) → D6 external guard process ✅ → D7 injection demo ✅ → D8 web dashboard ✅ → one recorded real Byreal trade (user action: Privy + mainnet USDC) → demo video + submission.

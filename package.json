@@ -12,6 +12,7 @@
     "web": "node --import tsx src/api-server.ts",
     "agent": "tsx src/run-agent.ts",
     "exec": "node --import tsx src/exec.ts",
+    "eval": "tsx src/run-eval.ts",
     "compile": "tsx scripts/compile.ts",
     "deploy": "node --env-file=.env --import tsx scripts/deploy.ts",
     "agent:live": "node --env-file=.env --import tsx src/run-agent.ts",
