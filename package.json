@@ -1,0 +1,27 @@
+{
+  "name": "sentinel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Intent-integrity guard for autonomous Byreal trading agents — block prompt-injection hijacks before signing.",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "agent": "tsx src/run-agent.ts",
+    "compile": "tsx scripts/compile.ts",
+    "deploy": "tsx scripts/deploy.ts",
+    "pretest": "tsx scripts/compile.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@byreal-io/byreal-perps-cli": "^0.3.7",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "solc": "^0.8.26",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

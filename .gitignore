@@ -1,0 +1,8 @@
+node_modules/
+dist/
+artifacts/
+*.log
+.env
+.env.*
+*:Zone.Identifier
+.DS_Store

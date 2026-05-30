@@ -1,0 +1,96 @@
+{
+  "success": true,
+  "data": {
+    "signals": {
+      "conservative": [
+        {
+          "coin": "xyz:MU",
+          "direction": "Long",
+          "price": "972.7",
+          "change24h": "1.21%",
+          "rsi": 56.8,
+          "funding": "-0.0000287415",
+          "fundingAnnualized": "-3.1%",
+          "dayVolume": "155525490.6861101091",
+          "openInterest": "177087.8519999999",
+          "score": 58.6,
+          "category": "conservative"
+        },
+        {
+          "coin": "XRP",
+          "direction": "Long",
+          "price": "1.3438",
+          "change24h": "1.28%",
+          "rsi": 56.2,
+          "funding": "-0.0000174264",
+          "fundingAnnualized": "-1.9%",
+          "dayVolume": "60489772.3068000078",
+          "openInterest": "66752372",
+          "score": 54.4,
+          "category": "conservative"
+        }
+      ],
+      "moderate": [
+        {
+          "coin": "NEAR",
+          "direction": "Short",
+          "price": "2.4245",
+          "change24h": "-4.67%",
+          "rsi": 46.8,
+          "funding": "0.0000125",
+          "fundingAnnualized": "1.4%",
+          "dayVolume": "133175006.3865700364",
+          "openInterest": "43383059.6000000089",
+          "score": 62.5,
+          "category": "moderate"
+        },
+        {
+          "coin": "xyz:CL",
+          "direction": "Long",
+          "price": "87.772",
+          "change24h": "0.76%",
+          "rsi": 34.7,
+          "funding": "-0.0000024778",
+          "fundingAnnualized": "-0.3%",
+          "dayVolume": "365790023.8728659749",
+          "openInterest": "2004895.9759999993",
+          "score": 60.1,
+          "category": "moderate"
+        }
+      ],
+      "aggressive": [
+        {
+          "coin": "XMR",
+          "direction": "Long",
+          "price": "398.38",
+          "change24h": "8.40%",
+          "rsi": 57.3,
+          "funding": "-0.0000937115",
+          "fundingAnnualized": "-10.3%",
+          "dayVolume": "33623805.8910899982",
+          "openInterest": "102152.444",
+          "score": 71.4,
+          "category": "aggressive"
+        },
+        {
+          "coin": "LIT",
+          "direction": "Long",
+          "price": "1.3869",
+          "change24h": "14.80%",
+          "rsi": 64.8,
+          "funding": "0.0000125",
+          "fundingAnnualized": "1.4%",
+          "dayVolume": "59872389.4062000141",
+          "openInterest": "58981392",
+          "score": 68.8,
+          "category": "aggressive"
+        }
+      ]
+    },
+    "summary": {
+      "scanned": 30,
+      "long": 16,
+      "short": 14
+    }
+  }
+}
