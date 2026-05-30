@@ -28,7 +28,10 @@
   .reason{color:var(--dim);font-size:13.5px;margin:10px 0 16px}
   .intent{font-family:var(--mono);font-size:18px;letter-spacing:.3px;margin:4px 0 14px}
   .short{color:var(--bad)} .long{color:var(--ok)}
+  .proj{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin:-6px 0 12px}
+  .proj .muted{color:var(--mut)}
   .hash{font-family:var(--mono);font-size:12px;color:var(--mut);word-break:break-all}
+  .badge.link{text-decoration:none;color:var(--accent);border-color:#1f2d3a;background:#0d141d}
   .badge{display:inline-flex;align-items:center;gap:6px;font:11px/1 var(--mono);color:var(--ok);
     border:1px solid #1f3a26;background:#0f1d14;padding:4px 9px;border-radius:999px}
   .actions{display:flex;gap:10px;margin-top:6px}
@@ -68,8 +71,12 @@
     <div class="reason" id="reason">scanning Byreal signals…</div>
     <div class="label">committed intent</div>
     <div class="intent" id="intent">—</div>
+    <div class="proj" id="proj"></div>
     <div class="hash" id="hash"></div>
-    <div style="margin-top:12px"><span class="badge" id="committed" style="display:none">⛓ committed before execution</span></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge" id="committed" style="display:none">⛓ committed before execution</span>
+      <a class="badge link" id="onchain" style="display:none" target="_blank"></a>
+    </div>
     <div class="actions">
       <button id="signBtn" disabled>Sign order</button>
       <button id="hijackBtn" class="danger" disabled>Inject hijack</button>
@@ -98,8 +105,19 @@ async function load(){
   $("src").textContent = `signals: ${r.source}, scanned ${r.scanned}`;
   $("reason").textContent = r.reasoning;
   $("intent").innerHTML = fmtOrder(r.intent);
+  const p = r.chosen.price, lev = r.intent.leverage;
+  const liq = r.intent.side === "short" ? p*(1+1/lev) : p*(1-1/lev);
+  $("proj").innerHTML = `entry ~$${p} · projected liq ~$${liq.toFixed(4)} <span class="muted">(client-side projection, not a venue sim)</span>`;
   $("hash").textContent = "commit " + r.hash;
   $("committed").style.display = "inline-flex";
+  if (r.onchain) {
+    const o = $("onchain");
+    o.href = r.onchain.txHash
+      ? `https://sepolia.mantlescan.xyz/tx/${r.onchain.txHash}`
+      : `https://sepolia.mantlescan.xyz/address/${r.onchain.address}`;
+    o.textContent = "⛓ committed on Mantle ↗";
+    o.style.display = "inline-flex";
+  }
   $("signBtn").disabled = false;
   $("hijackBtn").disabled = false;
 }

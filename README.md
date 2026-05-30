@@ -66,7 +66,9 @@ The demo: the agent freezes its intent and commits it to the guard; an honest or
 npm run web        # http://127.0.0.1:4200 — agent decides, then "Sign order" (✓ALLOW) vs "Inject hijack" (⚠BLOCK)
 ```
 
-A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.ts`. It shows the autonomous agent's reasoning + committed intent, then lets you sign the honest order (auto-signed) or inject a hijack and watch the guard block it with animated per-field divergences. The verdict is computed server-side by the same deterministic `evaluate()` the tests cover. (Promotes cleanly to Next.js/Vercel for submission polish.)
+A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.ts`. It shows the autonomous agent's reasoning + committed intent + projected entry/liq, then lets you sign the honest order (auto-signed) or inject a hijack and watch the guard block it with animated per-field divergences. The verdict is computed server-side by the same deterministic `evaluate()` the tests cover.
+
+When run with `.env` (`PORT=4200 node --env-file=.env --import tsx src/api-server.ts`), each committed intent is also anchored on **Mantle Sepolia** and the dashboard links the live commit tx on Mantlescan. (Promotes cleanly to Next.js/Vercel for submission polish — remaining.)
 
 ### Layout
 - `src/types.ts` — `TradeIntent` / `TradeOrder` (mirror the byreal-perps-cli param surface; no SVM decoding)

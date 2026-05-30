@@ -53,6 +53,21 @@ const server = createServer(async (req, res) => {
       const intent = round.decision.intent;
       const hash = commitHash(intent);
       store.set(hash, { intent, committedAt: Date.now() });
+
+      // optional: anchor the commitment on Mantle (when configured + deployed)
+      let onchain: Record<string, unknown> | null = null;
+      const addr = process.env.INTENT_LOG_ADDRESS;
+      if (addr && process.env.DEPLOYER_PRIVATE_KEY) {
+        try {
+          const { commitIntentHash } = await import("./commit-chain.js");
+          const receipt = await commitIntentHash(addr as `0x${string}`, `0x${hash}`);
+          onchain = { address: addr, txHash: receipt.transactionHash };
+        } catch {
+          // same intent already committed (first-write-wins) — still anchored, just earlier
+          onchain = { address: addr, alreadyCommitted: true };
+        }
+      }
+
       return json(200, {
         ok: true,
         source: round.source,
@@ -63,6 +78,7 @@ const server = createServer(async (req, res) => {
         hash,
         cleanOrder: intent,
         poisonedOrder: poison(intent),
+        onchain,
       });
     }
 
