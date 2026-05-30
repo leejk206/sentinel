@@ -7,6 +7,7 @@
   "scripts": {
     "demo": "tsx src/demo.ts",
     "demo:hijack": "node --import tsx src/demo-hijack.ts",
+    "demo:llm": "node --import tsx src/demo-llm-hijack.ts",
     "guard": "node --import tsx src/guard-server-main.ts",
     "web": "node --import tsx src/api-server.ts",
     "agent": "tsx src/run-agent.ts",
