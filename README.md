@@ -70,6 +70,22 @@ A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.
 
 When run with `.env` (`PORT=4200 node --env-file=.env --import tsx src/api-server.ts`), each committed intent is also anchored on **Mantle Sepolia** and the dashboard links the live commit tx on Mantlescan. (Promotes cleanly to Next.js/Vercel for submission polish — remaining.)
 
+## Attach to any agent — `sentinel exec` (the product shape)
+
+Sentinel isn't a web app; it's a guard you put in front of any Byreal agent. Instead of calling byreal-perps-cli directly, the agent calls `sentinel exec`, which checks the order against the committed intent (held by the external guard process) and only forwards on a match:
+
+```bash
+# the agent committed its intent earlier; now, instead of:
+#   byreal-perps-cli order market short 41.2456 NEAR --leverage 3
+# it calls:
+sentinel exec --commit <hash> order market short 41.2456 NEAR --leverage 3
+#   → ✓ ALLOW — matches committed intent.   dry-run → would sign: byreal-perps-cli order market short 41.2456 NEAR --leverage 3
+sentinel exec --commit <hash> order market short 412.456 ATTACKER --leverage 50
+#   → ⚠ BLOCK — order diverges (coin/size/leverage); not signing.   (exit 1)
+```
+
+`--execute` forwards to the real byreal-perps-cli on ALLOW (needs auth + funds); the default is dry-run, so the whole guard is provable with no money. `src/order.ts` maps to/from the exact CLI param surface — the integration *is* the command it guards.
+
 ### Layout
 - `src/types.ts` — `TradeIntent` / `TradeOrder` (mirror the byreal-perps-cli param surface; no SVM decoding)
 - `src/intent.ts` — canonicalize + `commitHash`

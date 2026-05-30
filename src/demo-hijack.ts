@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { runRound } from "./agent.js";
 import { commitToGuard, checkWithGuard, waitForGuard } from "./guard-client.js";
 import { poison } from "./poison.js";
+import { intentToCommand } from "./order.js";
 import { bold, dim, green, red, fmtOrder } from "./term.js";
 import type { TradeOrder } from "./types.js";
 
@@ -36,7 +37,12 @@ try {
   const a = await checkWithGuard(url, hash, cleanOrder);
   console.log(bold("[A] clean order → guard"));
   console.log("  " + fmtOrder(cleanOrder));
-  console.log("  " + (a.ok ? green("✓ ALLOW — auto-signing, unattended.") : red("⚠ BLOCK")) + "\n");
+  if (a.ok) {
+    console.log("  " + green("✓ ALLOW — auto-signing, unattended."));
+    console.log("  " + dim("forward → ") + intentToCommand(cleanOrder) + "\n");
+  } else {
+    console.log("  " + red("⚠ BLOCK") + "\n");
+  }
 
   // 4) poisoned tool response hijacks the order between freeze and sign → guard BLOCKS
   const hijacked = poison(cleanOrder);
