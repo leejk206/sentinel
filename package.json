@@ -8,6 +8,7 @@
     "demo": "tsx src/demo.ts",
     "demo:hijack": "node --import tsx src/demo-hijack.ts",
     "guard": "node --import tsx src/guard-server-main.ts",
+    "web": "node --import tsx src/api-server.ts",
     "agent": "tsx src/run-agent.ts",
     "compile": "tsx scripts/compile.ts",
     "deploy": "node --env-file=.env --import tsx scripts/deploy.ts",

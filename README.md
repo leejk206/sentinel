@@ -60,6 +60,14 @@ npm run demo:hijack    # spawns the guard process, then: clean order ALLOWED, hi
 
 The demo: the agent freezes its intent and commits it to the guard; an honest order is auto-signed (✓ALLOW); then a **poisoned tool response** (`src/poison.ts` — a neutral, deterministic param mutation, *not* a hand-authored attack) hijacks the order to `short 412 ATTACKER @ 50x`, and the guard blocks it (⚠BLOCK, per-field divergences). The guard's verdict is plain deterministic code with no LLM in the path.
 
+## D8 — web dashboard ✅
+
+```bash
+npm run web        # http://127.0.0.1:4200 — agent decides, then "Sign order" (✓ALLOW) vs "Inject hijack" (⚠BLOCK)
+```
+
+A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.ts`. It shows the autonomous agent's reasoning + committed intent, then lets you sign the honest order (auto-signed) or inject a hijack and watch the guard block it with animated per-field divergences. The verdict is computed server-side by the same deterministic `evaluate()` the tests cover. (Promotes cleanly to Next.js/Vercel for submission polish.)
+
 ### Layout
 - `src/types.ts` — `TradeIntent` / `TradeOrder` (mirror the byreal-perps-cli param surface; no SVM decoding)
 - `src/intent.ts` — canonicalize + `commitHash`
@@ -76,4 +84,4 @@ The demo: the agent freezes its intent and commits it to the guard; an honest or
 - `test/` — 31 tests (matcher, commitment, normalization, strategy, contract ABI/encoding, guard server)
 
 ## Roadmap (spec §3)
-D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deployed live) → D6 external guard process ✅ → D7 injection demo ✅ → UI → one recorded real Byreal trade.
+D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deployed live) → D6 external guard process ✅ → D7 injection demo ✅ → D8 web dashboard ✅ → one recorded real Byreal trade (user action: Privy + mainnet USDC) → demo video + submission.
