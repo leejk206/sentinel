@@ -39,14 +39,26 @@ It pulls `byreal-perps-cli signal scan` (free, no-auth, no-funds), picks the hig
 
 `contracts/IntentCommitLog.sol` — a tamper-evident, timestamped log. The agent commits `hash(intent)` here **before** building an order; `wasCommittedBefore(hash, t)` lets the guard prove the intent predates execution, so a post-commit hijack can't forge a matching, earlier-timestamped intent. First-write-wins = immutable.
 
+**Deployed live on Mantle Sepolia:** [`0xaad178553026ca9dbde163b6990346cd3a8ee8e0`](https://sepolia.mantlescan.xyz/address/0xaad178553026ca9dbde163b6990346cd3a8ee8e0). The agent commits its frozen intent on-chain each round (verified end-to-end: decide → freeze → `commit()` tx → `commitmentOf` read-back, `exists:true`).
+
 ```bash
-npm run compile                       # solc → artifacts/IntentCommitLog.json (verified in CI)
-cp .env.example .env                  # then fill DEPLOYER_PRIVATE_KEY (USER ACTION ↓)
-npm run deploy                        # deploys to Mantle Sepolia testnet
-npm run agent -- --source live        # if INTENT_LOG_ADDRESS+key set, also commits on Mantle
+npm run compile                       # solc → artifacts/IntentCommitLog.json
+cp .env.example .env                  # fill DEPLOYER_PRIVATE_KEY (testnet) + MANTLE_RPC_URL
+npm run deploy                        # deploys to Mantle Sepolia, prints address
+npm run agent:live -- --source live   # autonomous loop that also commits each intent on Mantle
 ```
 
-> **USER ACTION (the one funded gate):** deploying needs a Mantle Sepolia testnet key with test MNT — fund it at https://faucet.sepolia.mantle.xyz, put it in `.env`. The contract, viem client (`src/commit-chain.ts`), and deploy script are complete and the ABI/encoding is test-verified; only the funded deploy awaits you.
+> Testnet key is funded from https://faucet.sepolia.mantle.xyz. `.env` is gitignored.
+
+## D6 / D7 — external guard process + hijack demo ✅ (the core moment)
+
+The guard runs as its **own process** (`npm run guard`). The agent reaches it only over HTTP (`/commit`, `/check`) — it never shares memory, so a fully prompt-injected agent **cannot** tamper with the committed intent or get a divergent order signed.
+
+```bash
+npm run demo:hijack    # spawns the guard process, then: clean order ALLOWED, hijacked order BLOCKED
+```
+
+The demo: the agent freezes its intent and commits it to the guard; an honest order is auto-signed (✓ALLOW); then a **poisoned tool response** (`src/poison.ts` — a neutral, deterministic param mutation, *not* a hand-authored attack) hijacks the order to `short 412 ATTACKER @ 50x`, and the guard blocks it (⚠BLOCK, per-field divergences). The guard's verdict is plain deterministic code with no LLM in the path.
 
 ### Layout
 - `src/types.ts` — `TradeIntent` / `TradeOrder` (mirror the byreal-perps-cli param surface; no SVM decoding)
@@ -57,9 +69,11 @@ npm run agent -- --source live        # if INTENT_LOG_ADDRESS+key set, also comm
 - `src/agent.ts` — `runRound`: scan → decide → freeze intent
 - `src/commit-chain.ts` — viem client for IntentCommitLog (Mantle Sepolia)
 - `contracts/IntentCommitLog.sol` + `scripts/compile.ts` + `scripts/deploy.ts`
-- `src/demo.ts` / `src/run-agent.ts` — D1 guard demo / D2 agent loop
+- `src/guard-server.ts` / `src/guard-client.ts` / `src/guard-server-main.ts` — external guard process + client
+- `src/poison.ts` — deterministic "poisoned tool" mutation (stands in for an injection)
+- `src/demo.ts` / `src/demo-hijack.ts` / `src/run-agent.ts` — D1 guard demo / D6-7 hijack demo / D2 agent loop
 - `fixtures/` — committed intent, clean/hijacked orders, sample signals
-- `test/` — 27 tests (matcher, commitment, normalization, strategy, contract ABI/encoding)
+- `test/` — 31 tests (matcher, commitment, normalization, strategy, contract ABI/encoding, guard server)
 
 ## Roadmap (spec §3)
-D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deploy = user action) → external guard process → injection demo → UI → one recorded real Byreal trade.
+D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deployed live) → D6 external guard process ✅ → D7 injection demo ✅ → UI → one recorded real Byreal trade.

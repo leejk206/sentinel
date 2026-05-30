@@ -6,9 +6,12 @@
   "description": "Intent-integrity guard for autonomous Byreal trading agents — block prompt-injection hijacks before signing.",
   "scripts": {
     "demo": "tsx src/demo.ts",
+    "demo:hijack": "node --import tsx src/demo-hijack.ts",
+    "guard": "node --import tsx src/guard-server-main.ts",
     "agent": "tsx src/run-agent.ts",
     "compile": "tsx scripts/compile.ts",
-    "deploy": "tsx scripts/deploy.ts",
+    "deploy": "node --env-file=.env --import tsx scripts/deploy.ts",
+    "agent:live": "node --env-file=.env --import tsx src/run-agent.ts",
     "pretest": "tsx scripts/compile.ts",
     "test": "vitest run",
     "test:watch": "vitest"
