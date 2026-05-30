@@ -6,6 +6,8 @@ import { runRound } from "./agent.js";
 import { evaluate } from "./guard.js";
 import { commitHash } from "./intent.js";
 import { poison } from "./poison.js";
+import { finalizeOrder } from "./llm-agent.js";
+import { CLEAN_CONTEXT, INJECTED_CONTEXT } from "./contexts.js";
 import type { TradeIntent, TradeOrder } from "./types.js";
 import type { SignalSource } from "./signals.js";
 
@@ -87,6 +89,18 @@ const server = createServer(async (req, res) => {
       const stored = store.get(hash);
       if (!stored) return json(200, { ok: false, divergences: [{ field: "*", committed: hash, actual: null, reason: "no committed intent" }] });
       return json(200, evaluate(stored.intent, order));
+    }
+
+    // The LLM finalizes the order from execution-time desk context (clean or injected).
+    // The hijacked order is the MODEL's output, not hardcoded.
+    if (req.method === "POST" && url.pathname === "/api/finalize") {
+      const { hash, attack } = (await readJson(req)) as { hash: string; attack?: boolean };
+      const stored = store.get(hash);
+      if (!stored) return json(404, { error: "unknown commit" });
+      const context = attack ? INJECTED_CONTEXT : CLEAN_CONTEXT;
+      const { order, raw } = await finalizeOrder(stored.intent, context);
+      if (!order || Number.isNaN(order.size)) return json(200, { ok: false, error: "LLM output unparseable", raw });
+      return json(200, { attack: !!attack, order, verdict: evaluate(stored.intent, order) });
     }
 
     json(404, { error: "not found" });

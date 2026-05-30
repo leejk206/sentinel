@@ -8,142 +8,160 @@
   :root{
     --bg:#0a0c10; --panel:#12161d; --panel2:#161b24; --line:#222b38;
     --ink:#e6edf3; --dim:#8b97a7; --mut:#5b6675;
-    --ok:#3fb950; --bad:#f85149; --accent:#58a6ff;
+    --ok:#3fb950; --bad:#f85149; --accent:#58a6ff; --warn:#d29922;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:radial-gradient(1200px 700px at 50% -200px,#121a26,var(--bg));
+  body{margin:0;background:radial-gradient(1100px 650px at 50% -220px,#121a26,var(--bg));
     color:var(--ink);font:15px/1.5 -apple-system,Segoe UI,Inter,system-ui,sans-serif;
-    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px}
-  .wrap{width:100%;max-width:720px}
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 16px}
+  .wrap{width:100%;max-width:820px}
   header{display:flex;align-items:baseline;gap:12px}
   h1{font-size:20px;margin:0;letter-spacing:.2px}
   .tag{font:12px/1 var(--mono);color:var(--accent);border:1px solid var(--line);padding:4px 9px;border-radius:999px}
-  .sub{color:var(--dim);font-size:13px;margin:6px 0 24px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
-  .label{font:11px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin-bottom:10px}
-  .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #1a212b}
-  .row:last-child{border-bottom:0}
-  .k{color:var(--dim)} .v{font-family:var(--mono);color:var(--ink)}
-  .reason{color:var(--dim);font-size:13.5px;margin:10px 0 16px}
-  .intent{font-family:var(--mono);font-size:18px;letter-spacing:.3px;margin:4px 0 14px}
-  .short{color:var(--bad)} .long{color:var(--ok)}
-  .proj{font-family:var(--mono);font-size:12.5px;color:var(--dim);margin:-6px 0 12px}
-  .proj .muted{color:var(--mut)}
-  .hash{font-family:var(--mono);font-size:12px;color:var(--mut);word-break:break-all}
-  .badge.link{text-decoration:none;color:var(--accent);border-color:#1f2d3a;background:#0d141d}
-  .badge{display:inline-flex;align-items:center;gap:6px;font:11px/1 var(--mono);color:var(--ok);
-    border:1px solid #1f3a26;background:#0f1d14;padding:4px 9px;border-radius:999px}
-  .actions{display:flex;gap:10px;margin-top:6px}
-  button{flex:1;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);
-    font:14px/1 inherit;padding:13px;border-radius:10px;transition:.12s}
-  button:hover{border-color:#3a4658;background:#1b212c}
-  button:disabled{opacity:.4;cursor:not-allowed}
-  button.danger:hover{border-color:#5a2a2a;background:#1f1414}
-  .verdict{margin-top:16px;border-radius:12px;border:1px solid var(--line);padding:18px;display:none}
-  .verdict.show{display:block;animation:pop .18s ease}
+  .sub{color:var(--dim);font-size:13px;margin:6px 0 20px}
+  /* timeline */
+  .tl{display:flex;align-items:center;gap:6px;font:11px/1 var(--mono);color:var(--mut);margin-bottom:18px;flex-wrap:wrap}
+  .tl b{color:var(--ink)} .tl .lock{color:var(--accent)} .tl .sep{color:var(--line)}
+  .tl .atk{color:var(--bad)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .label{font:11px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+  .frow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a212b;font-family:var(--mono);font-size:14px}
+  .frow:last-child{border-bottom:0}
+  .frow .k{color:var(--mut)} .frow .val{color:var(--ink)}
+  .frow.bad{background:#1a1011;margin:0 -8px;padding:6px 8px;border-radius:6px;border-bottom:0}
+  .frow.bad .val{color:var(--bad);font-weight:600;animation:flash .5s ease 2}
+  @keyframes flash{50%{opacity:.4}}
+  .lock-badge{font:10px/1 var(--mono);color:var(--accent);border:1px solid #1f2d3a;background:#0d141d;padding:3px 7px;border-radius:999px}
+  .hash{font-family:var(--mono);font-size:11px;color:var(--mut);word-break:break-all;margin-top:10px}
+  .hash a{color:var(--accent);text-decoration:none}
+  .waiting{color:var(--mut);font-family:var(--mono);font-size:13px;padding:18px 0;text-align:center}
+  .reason{color:var(--dim);font-size:13px;margin:0 0 16px;font-style:italic}
+  /* controls */
+  .controls{display:flex;gap:10px;align-items:center;margin:18px 0 0;flex-wrap:wrap}
+  button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);
+    font:14px/1 inherit;padding:12px 16px;border-radius:10px;transition:.12s}
+  button:hover:not(:disabled){border-color:#3a4658;background:#1b212c}
+  button.atk{border-color:#5a2a2a}
+  button.atk:hover:not(:disabled){background:#1f1414;border-color:#7a3535}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .toggle{margin-left:auto;display:flex;align-items:center;gap:9px;font:13px var(--mono);color:var(--dim)}
+  .sw{width:42px;height:24px;border-radius:999px;border:1px solid var(--line);background:#0d1711;position:relative;cursor:pointer;transition:.15s}
+  .sw.off{background:#1a1011}
+  .sw .knob{position:absolute;top:2px;left:20px;width:18px;height:18px;border-radius:50%;background:var(--ok);transition:.15s}
+  .sw.off .knob{left:2px;background:var(--bad)}
+  /* outcome */
+  .outcome{margin-top:16px;border-radius:12px;border:1px solid var(--line);padding:16px 18px;display:none;font-weight:600}
+  .outcome.show{display:block;animation:pop .2s ease}
   @keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
-  .verdict.allow{border-color:#1f3a26;background:#0d1711}
-  .verdict.block{border-color:#4a1f1f;background:#170d0d}
-  .vhead{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px}
-  .allow .vhead{color:var(--ok)} .block .vhead{color:var(--bad)}
-  .vorder{font-family:var(--mono);color:var(--dim);font-size:13px;margin:8px 0 4px}
-  .divs{margin-top:10px;display:flex;flex-direction:column;gap:6px}
-  .div{font-family:var(--mono);font-size:13px;color:var(--bad);display:flex;gap:8px;
-    animation:slide .2s ease both}
-  .div .arrow{color:var(--mut)} .div .reason{color:var(--mut);font-size:12px;margin:0}
-  @keyframes slide{from{transform:translateX(-6px);opacity:0}to{transform:none;opacity:1}}
-  .foot{color:var(--mut);font-size:12px;margin-top:8px;line-height:1.7}
+  .outcome.safe{border-color:#1f3a26;background:#0d1711;color:var(--ok)}
+  .outcome.blocked{border-color:#4a3a1f;background:#161205;color:var(--warn)}
+  .outcome.drained{border-color:#4a1f1f;background:#170d0d;color:var(--bad)}
+  .outcome small{display:block;font-weight:400;color:var(--dim);margin-top:5px;font-size:12.5px}
+  .foot{color:var(--mut);font-size:12px;margin-top:18px;line-height:1.7}
   .foot a{color:var(--accent);text-decoration:none}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);display:inline-block}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Sentinel</h1>
-    <span class="tag">intent-integrity guard</span>
-  </header>
+  <header><h1>Sentinel</h1><span class="tag">intent-integrity guard</span></header>
   <p class="sub">An autonomous Byreal trading agent you can leave running unattended — it commits its intent before acting, and a deterministic guard blocks prompt-injection hijacks before signing.</p>
 
-  <div class="card">
-    <div class="label"><span class="dot" style="display:inline-block;vertical-align:middle;margin-right:7px"></span>autonomous agent · <span id="src">…</span></div>
-    <div class="reason" id="reason">scanning Byreal signals…</div>
-    <div class="label">committed intent</div>
-    <div class="intent" id="intent">—</div>
-    <div class="proj" id="proj"></div>
-    <div class="hash" id="hash"></div>
-    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-      <span class="badge" id="committed" style="display:none">⛓ committed before execution</span>
-      <a class="badge link" id="onchain" style="display:none" target="_blank"></a>
-    </div>
-    <div class="actions">
-      <button id="signBtn" disabled>Sign order</button>
-      <button id="hijackBtn" class="danger" disabled>Inject hijack</button>
-    </div>
-    <div class="verdict" id="verdict"></div>
+  <div class="tl">
+    scan <span class="sep">─</span> decide <span class="sep">─</span>
+    <span class="lock">🔒 commit intent</span> <span class="sep">─</span>
+    <span class="atk">exec context (injectable)</span> <span class="sep">─</span>
+    guard <span class="sep">─</span> sign
   </div>
 
+  <p class="reason" id="reason">scanning Byreal signals…</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label"><span class="dot"></span> committed intent <span class="lock-badge">🔒 frozen before execution</span></div>
+      <div id="intentRows"><div class="waiting">…</div></div>
+      <div class="hash" id="hash"></div>
+    </div>
+    <div class="card">
+      <div class="label" id="outLabel">outgoing order <span style="color:var(--mut)">· LLM-finalized</span></div>
+      <div id="orderRows"><div class="waiting">run the agent →</div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="cleanBtn" disabled>Run clean</button>
+    <button id="atkBtn" class="atk" disabled>Inject attack</button>
+    <div class="toggle">guard <span id="swLabel">ON</span>
+      <div class="sw" id="sw"><div class="knob"></div></div>
+    </div>
+  </div>
+
+  <div class="outcome" id="outcome"></div>
+
   <div class="foot">
-    The guard's verdict is plain deterministic code — no LLM in the trust path.
-    Commit log live on Mantle Sepolia:
-    <a href="https://sepolia.mantlescan.xyz/address/0xaad178553026ca9dbde163b6990346cd3a8ee8e0" target="_blank">0xaad1…e8e0</a>.
+    The outgoing order is finalized by a real LLM (Gemini) from execution-time context — the hijack is the model's, not hardcoded.
+    The guard's verdict is plain deterministic code, no LLM in the trust path.
+    Commit log on <a href="https://sepolia.mantlescan.xyz/address/0xaad178553026ca9dbde163b6990346cd3a8ee8e0" target="_blank">Mantle Sepolia</a>.
   </div>
 </div>
 
 <script type="module">
-const $ = (id) => document.getElementById(id);
-let R = null;
+const $ = (id)=>document.getElementById(id);
+let R=null, last=null, guardOn=true;
+const FIELDS=["side","coin","size","leverage"];
 
-const fmtOrder = (o) =>
-  `<span class="${o.side}">${o.side}</span> ${o.size} ${o.coin} @ ${o.leverage}x`;
+function rows(o, diverged=[]){
+  return FIELDS.map(f=>`<div class="frow ${diverged.includes(f)?"bad":""}">
+    <span class="k">${f}</span><span class="val">${o[f]}</span></div>`).join("");
+}
 
 async function load(){
-  const r = await fetch("/api/round").then(r=>r.json());
-  if(!r.ok){ $("reason").textContent = "no qualifying signal"; return; }
-  R = r;
-  $("src").textContent = `signals: ${r.source}, scanned ${r.scanned}`;
-  $("reason").textContent = r.reasoning;
-  $("intent").innerHTML = fmtOrder(r.intent);
-  const p = r.chosen.price, lev = r.intent.leverage;
-  const liq = r.intent.side === "short" ? p*(1+1/lev) : p*(1-1/lev);
-  $("proj").innerHTML = `entry ~$${p} · projected liq ~$${liq.toFixed(4)} <span class="muted">(client-side projection, not a venue sim)</span>`;
-  $("hash").textContent = "commit " + r.hash;
-  $("committed").style.display = "inline-flex";
-  if (r.onchain) {
-    const o = $("onchain");
-    o.href = r.onchain.txHash
-      ? `https://sepolia.mantlescan.xyz/tx/${r.onchain.txHash}`
-      : `https://sepolia.mantlescan.xyz/address/${r.onchain.address}`;
-    o.textContent = "⛓ committed on Mantle ↗";
-    o.style.display = "inline-flex";
-  }
-  $("signBtn").disabled = false;
-  $("hijackBtn").disabled = false;
+  R = await fetch("/api/round").then(r=>r.json());
+  if(!R.ok){ $("reason").textContent="no qualifying signal"; return; }
+  $("reason").textContent = R.reasoning;
+  $("intentRows").innerHTML = rows(R.intent);
+  const link = R.onchain && R.onchain.txHash
+    ? `https://sepolia.mantlescan.xyz/tx/${R.onchain.txHash}`
+    : `https://sepolia.mantlescan.xyz/address/${(R.onchain&&R.onchain.address)||""}`;
+  $("hash").innerHTML = `commit ${R.hash.slice(0,20)}…` + (R.onchain?` · <a href="${link}" target="_blank">⛓ on Mantle ↗</a>`:"");
+  $("cleanBtn").disabled=false; $("atkBtn").disabled=false;
 }
 
-async function check(order, hijack){
-  const v = await fetch("/api/check",{method:"POST",headers:{"content-type":"application/json"},
-    body:JSON.stringify({hash:R.hash, order})}).then(r=>r.json());
-  const el = $("verdict");
-  el.className = "verdict show " + (v.ok ? "allow":"block");
-  if(v.ok){
-    el.innerHTML = `<div class="vhead">✓ ALLOW</div>
-      <div class="vorder">${fmtOrder(order)}</div>
-      <div class="foot" style="margin-top:6px">matches committed intent — auto-signing, no human in the loop.</div>`;
+async function finalize(attack){
+  $("cleanBtn").disabled=$("atkBtn").disabled=true;
+  $("outLabel").innerHTML = `outgoing order · <span style="color:var(--warn)">${attack?"agent under attack…":"finalizing…"}</span>`;
+  $("orderRows").innerHTML = `<div class="waiting">LLM finalizing the order…</div>`;
+  $("outcome").className="outcome";
+  try{
+    const res = await fetch("/api/finalize",{method:"POST",headers:{"content-type":"application/json"},
+      body:JSON.stringify({hash:R.hash, attack})}).then(r=>r.json());
+    if(res.ok===false){ $("orderRows").innerHTML=`<div class="waiting">LLM output unparseable</div>`; return; }
+    last=res;
+    const diverged=(res.verdict.divergences||[]).map(d=>d.field);
+    $("outLabel").innerHTML = `outgoing order · <span style="color:var(--mut)">LLM-finalized</span>`;
+    $("orderRows").innerHTML = rows(res.order, diverged);
+    renderOutcome();
+  }finally{ $("cleanBtn").disabled=$("atkBtn").disabled=false; }
+}
+
+function renderOutcome(){
+  if(!last) return;
+  const el=$("outcome"); const ok=last.verdict.ok;
+  if(guardOn){
+    if(ok){ el.className="outcome show safe"; el.innerHTML=`✓ signed<small>order matches the committed intent — auto-signed, no human in the loop.</small>`; }
+    else { el.className="outcome show blocked"; el.innerHTML=`⚠ BLOCKED by guard — funds safe<small>the order diverges from the intent committed before the context was read; refused to sign.</small>`; }
   } else {
-    const rows = v.divergences.map((d,i)=>
-      `<div class="div" style="animation-delay:${i*70}ms"><span>· ${d.field}:</span>
-        <span>${d.committed}</span><span class="arrow">→</span><span>${d.actual}</span></div>`).join("");
-    el.innerHTML = `<div class="vhead">⚠ BLOCK — refused to sign</div>
-      <div class="vorder">${fmtOrder(order)} <span style="color:var(--mut)">(poisoned tool response)</span></div>
-      <div class="divs">${rows}</div>
-      <div class="foot" style="margin-top:10px">order diverges from the committed intent — funds safe.</div>`;
+    if(ok){ el.className="outcome show safe"; el.innerHTML=`signed<small>no divergence this time.</small>`; }
+    else { el.className="outcome show drained"; el.innerHTML=`💀 order executed — funds drained<small>guard off: the hijacked order went straight through. this is what Sentinel prevents.</small>`; }
   }
 }
 
-$("signBtn").onclick = ()=> check(R.cleanOrder, false);
-$("hijackBtn").onclick = ()=> check(R.poisonedOrder, true);
+$("cleanBtn").onclick=()=>finalize(false);
+$("atkBtn").onclick=()=>finalize(true);
+$("sw").onclick=()=>{ guardOn=!guardOn; $("sw").className="sw"+(guardOn?"":" off"); $("swLabel").textContent=guardOn?"ON":"OFF"; renderOutcome(); };
 load();
 </script>
 </body>

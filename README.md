@@ -66,9 +66,9 @@ The demo: the agent freezes its intent and commits it to the guard; an honest or
 npm run web        # http://127.0.0.1:4200 — agent decides, then "Sign order" (✓ALLOW) vs "Inject hijack" (⚠BLOCK)
 ```
 
-A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.ts`. It shows the autonomous agent's reasoning + committed intent + projected entry/liq, then lets you sign the honest order (auto-signed) or inject a hijack and watch the guard block it with animated per-field divergences. The verdict is computed server-side by the same deterministic `evaluate()` the tests cover.
+A zero-build single-page dashboard (`web/index.html`) served by `src/api-server.ts`, wired to the **real LLM**: it shows the committed intent (frozen, linked on Mantlescan) next to the outgoing order. **"Inject attack"** sends the poisoned context to Gemini live — the model reroutes to `ASTER 50x` on its own — and the diverging fields flash red while the guard stamps ⚠BLOCKED (funds safe). A **Guard ON/OFF toggle** shows the counterfactual: with the guard off, the same hijacked order executes → 💀 funds drained.
 
-When run with `.env` (`PORT=4200 node --env-file=.env --import tsx src/api-server.ts`), each committed intent is also anchored on **Mantle Sepolia** and the dashboard links the live commit tx on Mantlescan. (Promotes cleanly to Next.js/Vercel for submission polish — remaining.)
+Run with `.env` (`PORT=4200 node --env-file=.env --import tsx src/api-server.ts`) to also anchor each intent on Mantle Sepolia. The verdict is the same deterministic `evaluate()` the tests cover — no LLM in the trust path.
 
 ## Real-injection validation — the hijack is the model's, not ours
 
