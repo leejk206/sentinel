@@ -4,5 +4,12 @@ artifacts/
 *.log
 .env
 .env.*
+!.env.example
 *:Zone.Identifier
 .DS_Store
+
+# safety: never commit strategy/hackathon material if any lands here
+GRANT.md
+COUNCIL-NOTES.md
+SUBMISSION.md
+DECK.md

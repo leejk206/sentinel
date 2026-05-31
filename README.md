@@ -2,10 +2,6 @@
 
 **An autonomous Byreal trading agent you can leave running unattended — because it commits its intent before it acts, and an external deterministic guard blocks any order that doesn't match (catching prompt-injection hijacks before signing).**
 
-Built for the Mantle **Turing Test Hackathon 2026 · Track 6 (Agentic Economy)**. Full spec: `../web3-grants-quest/docs/sentinel-spec.md`.
-
-> Headline = the autonomous agent. The guard is the trust beat that makes unattended autonomy believable.
-
 ## Why
 
 This week, AI agents were hijacked through poisoned dependencies (jqwik, TanStack-npm supply-chain injections). An autonomous agent that holds keys and trades is the highest-value target: a poisoned tool result can rewrite its order to dump into a scam market at 50x or redirect funds. Sentinel freezes the agent's **intent** before any untrusted input touches the execution path, then an **external** process deterministically checks the actual order against that committed intent — and refuses to sign on divergence.
@@ -115,7 +111,6 @@ sentinel exec --commit <hash> order market short 412.456 ATTACKER --leverage 50
 - `fixtures/` — committed intent, clean/hijacked orders, sample signals
 - `src/eval.ts` + `src/run-eval.ts` — measured detection / false-positive table (`npm run eval`)
 - `test/` — 38 tests (matcher, commitment, normalization, strategy, contract ABI/encoding, guard server, eval)
-- `docs/SUBMISSION.md` — submission checklist, BUIDL copy, demo script, X thread, deck outline
 
 ## Roadmap (spec §3)
 D1 guard ✅ → D2 autonomous agent loop ✅ → D4 Mantle commit log ✅ (deployed live) → D6 external guard process ✅ → D7 injection demo ✅ → D8 web dashboard ✅ → one recorded real Byreal trade (user action: Privy + mainnet USDC) → demo video + submission.
